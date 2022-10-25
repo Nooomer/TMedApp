@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TVMedApp</string>
+    <string name="log_in">Log in</string>
+    <string name="login_placeholder">Type login</string>
+</resources>
