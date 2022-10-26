@@ -1,29 +1,29 @@
 package nooomer.tvmedapp
 
+import com.tvmedicine.models.User
 import nooomer.tvmedapp.models.*
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**Implementation of api methods and their parameters. Any method expects the name of the api method to be passed in the form method_name.php*/
 interface API {
-    @GET("/{method}")
+
     /**Auth methods.
      * @param methodName it method name which need use. Type - [String]
      * @param phoneNumber it phone number which use like login. Type - [String]
      * @param password it password for auth. Type - [String]
      *@return [AuthModel] */
+    @POST("/{method}")
     fun auth(
         @Path("method") methodName: String?,
-        @Query("phone_number") phoneNumber: String?,
-        @Query("password") password: String
+        @Body body: User?
     ): Call<List<AuthModel?>?>?
     @GET("/{method}")
             /**Get all patient methods.
              * @return [PatientModel]*/
     fun getAllPatient(
-            @Path("method") methodName: String?
+            @Path("method") methodName: String?,
+            @Header("Authorization") token: String?
     ): Call<List<PatientModel?>?>?
     @GET("/{method}")
             /**Get patient by ID methods
