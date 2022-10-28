@@ -17,12 +17,16 @@ class SessionManager (context: Context) {
     /**
      * Function to save auth token
      */
-    fun saveAuthToken(token: String) {
+    fun saveAuthToken(token: String?) {
         val editor = prefs.edit()
         editor.putString(USER_TOKEN, token)
         editor.apply()
     }
-
+fun deleteAuthToken(){
+    val editor = prefs.edit()
+    editor.clear()
+    editor.apply()
+}
     /**
      * Function to fetch auth token
      */

@@ -17,7 +17,7 @@ interface API {
     fun auth(
         @Path("method") methodName: String?,
         @Body body: User?
-    ): Call<List<AuthModel?>?>?
+    ): Call<AuthModel?>?
     @GET("/{method}")
             /**Get all patient methods.
              * @return [PatientModel]*/
