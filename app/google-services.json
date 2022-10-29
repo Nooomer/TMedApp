@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "83192225421",
+    "project_id": "tvmedicines",
+    "storage_bucket": "tvmedicines.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83192225421:android:d172b69bed799dc39a0cc4",
+        "android_client_info": {
+          "package_name": "nooomer.tvmedapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83192225421-3vdqlrks0sj14td43ho1a51mq9sv8gra.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nooomer.tvmedapp",
+            "certificate_hash": "b0ecc8210f2f666b05f5558f863bb64aa8a7d3f2"
+          }
+        },
+        {
+          "client_id": "83192225421-qhur5cfvgspmaon453ku5pqtra3huaj3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1cT9ddQYjpkeJXJ29gTBU8j1gN4Uw2Dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83192225421-qhur5cfvgspmaon453ku5pqtra3huaj3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

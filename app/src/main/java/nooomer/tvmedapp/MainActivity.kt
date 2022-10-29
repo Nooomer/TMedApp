@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tvmedicine.models.User
@@ -17,15 +16,15 @@ import nooomer.tvmedapp.models.PatientModel
 class MainActivity : AppCompatActivity() {
     private fun <T> CoroutineScope.asyncIO(ioFun: () -> T) = async(Dispatchers.IO) { ioFun() }
     lateinit var ssm:SessionManager
-    val scope = CoroutineScope(Dispatchers.Main + Job())
-    var result: AuthModel? = null
-    var result2: List<PatientModel?>? = null
+    private val scope = CoroutineScope(Dispatchers.Main + Job())
+    private var result: AuthModel? = null
+    private var result2: List<PatientModel?>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val mService2 = Common.retrofitService
         ssm = SessionManager(this)
-        if(ssm.fetchAuthToken()!=""){
+        if((ssm.fetchAuthToken()!="")and(ssm.fetchTokenLifeTime()?.toLong()!! <(ssm.fetchTokenLifeTime()?.toLong()?.plus(60000000000)!!))){
             val intent = Intent(
                 applicationContext,
                 TreatmentActivity::class.java
@@ -71,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                     toast.show()
                 } else {
                     ssm.saveAuthToken(result?.token)
+                    ssm.saveLifeTime(System.currentTimeMillis().toString())
                     val toast = Toast.makeText(
                         applicationContext,
                         "Токен сохранен",
