@@ -13,7 +13,21 @@ class SessionManager (context: Context) {
     companion object {
         const val USER_TOKEN = "user_token"
         const val TOKEN_LIFETIME = "token_lifetime"
+        const val USER_TYPE = "user_type"
     }
+
+    init{
+        if(fetchAuthToken()==null) {
+            saveLifeTime("")
+            saveAuthToken("")
+        }
+    }
+
+fun valid():Boolean{
+    return fetchAuthToken() != ""
+}
+
+
 
     /**
      * Function to save auth token
@@ -28,7 +42,12 @@ class SessionManager (context: Context) {
         editor.putString(TOKEN_LIFETIME, lifetime)
         editor.apply()
     }
-fun deleteAuthToken(){
+    fun saveUserType(user_type: String?){
+        val editor = prefs.edit()
+        editor.putString(USER_TYPE, user_type)
+        editor.apply()
+    }
+fun deleteAll(){
     val editor = prefs.edit()
     editor.clear()
     editor.apply()
@@ -41,5 +60,8 @@ fun deleteAuthToken(){
     }
     fun fetchTokenLifeTime(): String? {
         return prefs.getString(TOKEN_LIFETIME, null)
+    }
+    fun fetchUserType(): String? {
+        return prefs.getString(USER_TYPE, null)
     }
 }
