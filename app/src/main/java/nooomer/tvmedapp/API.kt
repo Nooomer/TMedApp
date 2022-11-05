@@ -38,6 +38,7 @@ interface API {
              * @return [TreatmentModel]*/
     fun getAllTreatment(
         @Path("method") methodName: String?,
+        @Header("Authorization") token: String?
     ): Call<List<TreatmentModel?>?>?
     @GET("/{method}")
             /**Get treatment by ID methods.
