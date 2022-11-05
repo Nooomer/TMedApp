@@ -24,12 +24,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val mService2 = Common.retrofitService
         ssm = SessionManager(this)
-        if((ssm.fetchAuthToken()!="")and(ssm.fetchTokenLifeTime()?.toLong()!! <(ssm.fetchTokenLifeTime()?.toLong()?.plus(60000000000)!!))){
-            val intent = Intent(
-                applicationContext,
-                TreatmentActivity::class.java
-            )
-            startActivity(intent)
+        if(ssm.valid()) {
+            if ((ssm.fetchTokenLifeTime()?.toLong()!! < (ssm.fetchTokenLifeTime()?.toLong()
+                    ?.plus(60000000000)!!))
+            ) {
+                val intent = Intent(
+                    applicationContext,
+                    TreatmentActivity::class.java
+                )
+                startActivity(intent)
+            }
         }
             //load()
     }
@@ -56,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     fun login_click(view: View){
         val login_text = findViewById<EditText>(R.id.editTextTextPersonName).text.toString()
         val password_text = findViewById<EditText>(R.id.editTextTextPassword).text.toString()
-        if((ssm.fetchAuthToken()==null) and (login_text!="")) {
+        if(!ssm.valid() and (login_text!="")) {
             scope.launch {
                 val def = scope.asyncIO { auth(login_text, password_text) }
                 def.await()
@@ -89,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         result2 = call?.execute()?.body()
     }
     fun resetToken(view: View) {
-        ssm.deleteAuthToken()
+        ssm.deleteAll()
     }
     private fun auth(login: String?, password: String?) {
         val mService = Common.retrofitService
