@@ -3,65 +3,72 @@ package nooomer.tvmedapp.RetrifitService
 import android.content.Context
 import android.content.SharedPreferences
 import nooomer.tvmedapp.R
+import nooomer.tvmedapp.interfaces.PreferenceDataType
+import nooomer.tvmedapp.interfaces.TSessionManager
 
 /**
  * Session manager to save and fetch data from SharedPreferences
  */
-class SessionManager (context: Context) {
+class SessionManager(context: Context): TSessionManager {
     private var prefs: SharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+    private val editor: SharedPreferences.Editor = prefs.edit()
 
-    companion object {
-        const val USER_TOKEN = "user_token"
-        const val TOKEN_LIFETIME = "token_lifetime"
-        const val USER_TYPE = "user_type"
-    }
+    private var token: String?
+        get() = prefs.getString(USER_TOKEN, null)
+        set(value) {
+            editor.putString(USER_TOKEN, value)
+        }
+    private var tokenLifetime: String?
+        get() = prefs.getString(TOKEN_LIFETIME, null)
+        set(value) {
+            editor.putString(TOKEN_LIFETIME, value)
+        }
+
+    private var userType: String?
+        get() = prefs.getString(USER_TYPE, null)
+        set(value) {
+            editor.putString(USER_TYPE, value)
+        }
+    private var userId: String?
+        get() = prefs.getString(USER_ID, null)
+        set(value) {
+            editor.putString(USER_ID, value)
+        }
 
     init{
-        if(fetchAuthToken()==null) {
-            saveLifeTime("")
-            saveAuthToken("")
+        if(fetch(USER_TOKEN)==null) {
+            tokenLifetime = ""
+            token = ""
         }
     }
 
-fun valid():Boolean{
-    return fetchAuthToken() != ""
-}
+    override fun validation(): Boolean {
+        return fetch(USER_TOKEN) != ""
+    }
 
+    override fun fetch(param: String):String? {
+        when(param) {
+            USER_TOKEN -> return token
+            TOKEN_LIFETIME -> return tokenLifetime
+            USER_TYPE -> return userType
+            USER_ID -> return userId
+        }
+        return "Not Found params"
+    }
 
-
-    /**
-     * Function to save auth token
-     */
-    fun saveAuthToken(token: String?) {
+    override fun save(param: String, data: String?) {
         val editor = prefs.edit()
-        editor.putString(USER_TOKEN, token)
+        when(param) {
+            USER_TOKEN -> token = data
+            TOKEN_LIFETIME -> tokenLifetime = data
+            USER_TYPE -> userType = data
+            USER_ID -> userId = data
+        }
         editor.apply()
     }
-    fun saveLifeTime(lifetime: String?){
-        val editor = prefs.edit()
-        editor.putString(TOKEN_LIFETIME, lifetime)
+
+    override fun clearSession() {
+        editor.clear()
         editor.apply()
-    }
-    fun saveUserType(user_type: String?){
-        val editor = prefs.edit()
-        editor.putString(USER_TYPE, user_type)
-        editor.apply()
-    }
-fun deleteAll(){
-    val editor = prefs.edit()
-    editor.clear()
-    editor.apply()
-}
-    /**
-     * Function to fetch auth token
-     */
-    fun fetchAuthToken(): String? {
-        return prefs.getString(USER_TOKEN, null)
-    }
-    fun fetchTokenLifeTime(): String? {
-        return prefs.getString(TOKEN_LIFETIME, null)
-    }
-    fun fetchUserType(): String? {
-        return prefs.getString(USER_TYPE, null)
     }
 }
