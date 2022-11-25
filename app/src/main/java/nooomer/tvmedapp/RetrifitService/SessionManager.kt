@@ -17,28 +17,34 @@ class SessionManager(context: Context): TSessionManager {
         get() = prefs.getString(USER_TOKEN, null)
         set(value) {
             editor.putString(USER_TOKEN, value)
+            editor.apply()
         }
     private var tokenLifetime: String?
         get() = prefs.getString(TOKEN_LIFETIME, null)
         set(value) {
             editor.putString(TOKEN_LIFETIME, value)
+            editor.apply()
         }
 
     private var userType: String?
         get() = prefs.getString(USER_TYPE, null)
         set(value) {
             editor.putString(USER_TYPE, value)
+            editor.apply()
         }
     private var userId: String?
         get() = prefs.getString(USER_ID, null)
         set(value) {
             editor.putString(USER_ID, value)
+            editor.apply()
         }
 
     init{
         if(fetch(USER_TOKEN)==null) {
             tokenLifetime = ""
             token = ""
+            userId = ""
+            userType = ""
         }
     }
 
