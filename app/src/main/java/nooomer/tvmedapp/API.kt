@@ -1,6 +1,6 @@
 package nooomer.tvmedapp
 
-import com.tvmedicine.models.User
+import com.tvmedicine.models.LoginData
 import nooomer.tvmedapp.models.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -16,23 +16,23 @@ interface API {
     @POST("/{method}")
     fun auth(
         @Path("method") methodName: String?,
-        @Body body: User?
+        @Body body: LoginData?
     ): Call<AuthModel?>?
     @GET("/{method}")
             /**Get all patient methods.
-             * @return [PatientModel]*/
-    fun getAllPatient(
+             * @return [UserModel]*/
+    fun getAllUser(
             @Path("method") methodName: String?,
             @Header("Authorization") token: String?
-    ): Call<List<PatientModel?>?>?
+    ): Call<List<UserModel?>?>?
     @GET("/{method}")
             /**Get patient by ID methods
              * @param id Patient id information about which need get. Type - [String]
-             * @return [PatientModel]*/
+             * @return [UserModel]*/
     fun getPatientFromId(
         @Path("method") methodName: String?,
         @Query("id") id:Int?
-    ): Call<List<PatientModel?>?>?
+    ): Call<List<UserModel?>?>?
     @GET("/{method}")
             /**Get all treatment methods.
              * @return [TreatmentModel]*/

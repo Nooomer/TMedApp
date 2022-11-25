@@ -6,21 +6,20 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.tvmedicine.models.User
 import kotlinx.coroutines.*
 import nooomer.tvmedapp.RetrifitService.Common
 import nooomer.tvmedapp.RetrifitService.SessionManager
 import nooomer.tvmedapp.interfaces.PreferenceDataType
-import nooomer.tvmedapp.interfaces.TSessionManager
+import nooomer.tvmedapp.interfaces.RetorfitFun
 import nooomer.tvmedapp.models.AuthModel
-import nooomer.tvmedapp.models.PatientModel
+import nooomer.tvmedapp.models.UserModel
 
-class MainActivity : AppCompatActivity(), PreferenceDataType {
+class MainActivity : AppCompatActivity(), PreferenceDataType, RetorfitFun {
     private fun <T> CoroutineScope.asyncIO(ioFun: () -> T) = async(Dispatchers.IO) { ioFun() }
     lateinit var ssm:SessionManager
     private val scope = CoroutineScope(Dispatchers.Main + Job())
     private var result: AuthModel? = null
-    private var result2: List<PatientModel?>? = null
+    private var result2: List<UserModel?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity(), PreferenceDataType {
 
     fun load(){
         scope.launch {
-            val def = scope.asyncIO { getAllPatient("Bearer "+ssm.fetch(TOKEN_LIFETIME)) }
+            val def = scope.asyncIO {get("all","patient","Bearer "+ssm.fetch(TOKEN_LIFETIME)) }
             def.await()
 
             if (result2?.get(0)?.id == null) {
@@ -64,9 +63,8 @@ class MainActivity : AppCompatActivity(), PreferenceDataType {
         val password_text = findViewById<EditText>(R.id.editTextTextPassword).text.toString()
         if(!ssm.validation() and (login_text!="")) {
             scope.launch {
-                val def = scope.asyncIO { auth(login_text, password_text) }
+                val def = scope.asyncIO { result = auth(login_text, password_text) }
                 def.await()
-
                 if (result?.token == null) {
                     val toast = Toast.makeText(
                         applicationContext,
@@ -77,6 +75,8 @@ class MainActivity : AppCompatActivity(), PreferenceDataType {
                 } else {
                     ssm.save(USER_TOKEN, result?.token)
                     ssm.save(TOKEN_LIFETIME, System.currentTimeMillis().toString())
+                    ssm.save(USER_TYPE, result?.user_type)
+                    ssm.save(USER_ID, result?.user_id)
                     val toast = Toast.makeText(
                         applicationContext,
                         "Токен сохранен",
@@ -89,17 +89,16 @@ class MainActivity : AppCompatActivity(), PreferenceDataType {
         }
     }
 
-    private fun getAllPatient(token: String?) {
+   /* private fun getAllPatient(token: String?) {
         val mService = Common.retrofitService
         val call = mService.getAllPatient("patient", token)
         result2 = call?.execute()?.body()
-    }
+    }*/
     fun resetToken(view: View) {
         ssm.clearSession()
     }
-    private fun auth(login: String?, password: String?) {
-        val mService = Common.retrofitService
-        val call = mService.auth("login", User(login, password))
-        result = call?.execute()?.body()
+    /*private fun auth(login: String?, password: String?) {
+
     }
+    */
 }
