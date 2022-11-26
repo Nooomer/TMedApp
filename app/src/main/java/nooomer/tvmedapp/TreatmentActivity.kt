@@ -71,7 +71,28 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun 
                     }
             }
             "patient"->{
-
+                scope.launch {
+                    val def = scope.asyncIO {
+                        result =
+                            get(
+                                "filtered",
+                                "treatment","Bearer "+ssm.fetch(USER_TOKEN), ssm.fetch(USER_ID)!!
+                            ) as List<TreatmentModel?>?
+                    }
+                    def.await()
+                    viewSize = result!!.size
+                    for (i in 0 until viewSize) {
+                        data.add(
+                            mutableListOf<String?>(
+                                result!![i]?.patientSurename,
+                                result!![i]?.doctorSurname,
+                                result!![i]?.startdate
+                            )
+                        )
+                        recyclerView.adapter = RvAdapter(data, viewSize)
+                    }
+                    indicator.hide()
+                }
             }
         }
     }
