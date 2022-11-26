@@ -41,6 +41,15 @@ interface RetrorfitFun {
                 }
 
             }
+            "filtered" ->{
+                when(table){
+                    "treatment" ->{
+                        val call = mService.getTreatmentFromPatientId("treatment", params[0], token)
+                        result2 =  call?.execute()?.body()
+                        return result2
+                    }
+                }
+            }
         }
         return null
     }
