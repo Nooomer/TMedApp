@@ -10,11 +10,11 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.*
 import nooomer.tvmedapp.RetrifitService.SessionManager
 import nooomer.tvmedapp.interfaces.PreferenceDataType
-import nooomer.tvmedapp.interfaces.RetorfitFun
+import nooomer.tvmedapp.interfaces.RetrorfitFun
 import nooomer.tvmedapp.models.UserModel
 import nooomer.tvmedapp.models.TreatmentModel
 
-class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetorfitFun {
+class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun {
     lateinit var ssm: SessionManager
     lateinit var indicator: LinearProgressIndicator
     lateinit var recyclerView: RecyclerView
@@ -44,8 +44,7 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetorfitFun {
 
 
     private fun load() {
-        var result1 = result
-        when (ssm.fetch(USER_TYPE)) {
+         when (ssm.fetch(USER_TYPE)) {
             "doctor" ->
             {
                 scope.launch {
@@ -67,7 +66,6 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetorfitFun {
                                 )
                             )
                             recyclerView.adapter = RvAdapter(data, viewSize)
-                            recyclerView.adapter?.notifyDataSetChanged()
                         }
                         indicator.hide()
                     }

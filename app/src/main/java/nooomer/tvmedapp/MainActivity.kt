@@ -10,11 +10,11 @@ import kotlinx.coroutines.*
 import nooomer.tvmedapp.RetrifitService.Common
 import nooomer.tvmedapp.RetrifitService.SessionManager
 import nooomer.tvmedapp.interfaces.PreferenceDataType
-import nooomer.tvmedapp.interfaces.RetorfitFun
+import nooomer.tvmedapp.interfaces.RetrorfitFun
 import nooomer.tvmedapp.models.AuthModel
 import nooomer.tvmedapp.models.UserModel
 
-class MainActivity : AppCompatActivity(), PreferenceDataType, RetorfitFun {
+class MainActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun {
     private fun <T> CoroutineScope.asyncIO(ioFun: () -> T) = async(Dispatchers.IO) { ioFun() }
     lateinit var ssm:SessionManager
     private val scope = CoroutineScope(Dispatchers.Main + Job())
