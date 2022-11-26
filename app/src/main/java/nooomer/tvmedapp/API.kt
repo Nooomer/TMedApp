@@ -40,13 +40,14 @@ interface API {
         @Path("method") methodName: String?,
         @Header("Authorization") token: String?
     ): Call<List<TreatmentModel?>?>?
-    @GET("/{method}")
+    @GET("/{method}/patient/{id}")
             /**Get treatment by ID methods.
              *  @param id Treatment id information about which need get. Type - [String]
              *  @return [TreatmentModel]*/
-    fun getTreatmentFromId(
+    fun getTreatmentFromPatientId(
         @Path("method") methodName: String?,
-        @Query("id") id:Int
+        @Path("id") id:String?,
+        @Header("Authorization") token: String?
     ): Call<List<TreatmentModel?>?>?
     @GET("/{method}")
             /**Get treatment for User by phone number.
