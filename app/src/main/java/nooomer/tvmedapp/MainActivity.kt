@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun {
                     applicationContext,
                     TreatmentActivity::class.java
                 )
+                finish()
                 startActivity(intent)
             }
         }
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun {
             scope.launch {
                 val def = scope.asyncIO { result = auth(login_text, password_text) }
                 def.await()
-                if (result?.token == null) {
+                if ((result?.token == null) or (result == null)) {
                     val toast = Toast.makeText(
                         applicationContext,
                         "Сломано",
@@ -83,6 +84,11 @@ class MainActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun {
                         Toast.LENGTH_SHORT
                     )
                     toast.show()
+                    startActivity(Intent(
+                        applicationContext,
+                        TreatmentActivity::class.java
+                    ))
+                    finish()
                     println(result?.token)
                 }
             }
