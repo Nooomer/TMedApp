@@ -1,7 +1,9 @@
 package nooomer.tvmedapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -19,7 +21,7 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun 
     lateinit var indicator: LinearProgressIndicator
     lateinit var recyclerView: RecyclerView
     private var viewSize: Int = 0
-    val data = mutableListOf<MutableList<String?>>()
+    var data = mutableListOf<MutableList<String?>>()
 
     private fun <T> CoroutineScope.asyncIO(ioFun: () -> T) = async(Dispatchers.IO) { ioFun() }
     private var result: List<TreatmentModel?>? = null
@@ -39,6 +41,12 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun 
        val logoutBtn = findViewById<FloatingActionButton>(R.id.out_btn)
         logoutBtn.setOnClickListener{
             ssm.clearSession()
+            val intent = Intent(
+                applicationContext,
+                MainActivity::class.java
+            )
+            finish()
+            startActivity(intent)
         }
     }
 
@@ -56,6 +64,7 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun 
                                 ) as List<TreatmentModel?>?
                         }
                             def.await()
+                    try {
                         viewSize = result!!.size
                         for (i in 0 until viewSize) {
                             data.add(
@@ -67,6 +76,15 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun 
                             )
                             recyclerView.adapter = RvAdapter(data, viewSize)
                         }
+                    }
+                    catch (e: NullPointerException){
+                        val toast = Toast.makeText(
+                            applicationContext,
+                            "Данные не загружены",
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                         indicator.hide()
                     }
             }
@@ -80,7 +98,17 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun 
                             ) as List<TreatmentModel?>?
                     }
                     def.await()
-                    viewSize = result!!.size
+                    try {
+                        viewSize = result!!.size
+                    }
+                    catch (e: NullPointerException){
+                        val toast = Toast.makeText(
+                            applicationContext,
+                            "Данные не загружены",
+                            Toast.LENGTH_SHORT
+                        )
+                        toast.show()
+                    }
                     for (i in 0 until viewSize) {
                         data.add(
                             mutableListOf<String?>(
@@ -89,11 +117,20 @@ class TreatmentActivity : AppCompatActivity(), PreferenceDataType, RetrorfitFun 
                                 result!![i]?.startdate
                             )
                         )
-                        recyclerView.adapter = RvAdapter(data, viewSize)
+                        recyclerView.adapter = RvAdapter(data,viewSize)
                     }
                     indicator.hide()
                 }
             }
         }
+    }
+    override fun onRestart() {
+        super.onRestart()
+        indicator = findViewById(R.id.ProgressIndicator)
+        indicator.showAnimationBehavior = BaseProgressIndicator.SHOW_OUTWARD
+        indicator.hideAnimationBehavior = BaseProgressIndicator.HIDE_OUTWARD
+        indicator.show()
+        //result = null
+        load()
     }
 }
