@@ -56,10 +56,18 @@ interface RetrorfitFun {
 
     fun auth(login: String?, password: String?): AuthModel? {
         val mService = Common.retrofitService
+        val ex_call: Response<AuthModel?>?
         var result: AuthModel? = null
         var result2: List<TreatmentModel?>?
         val call = mService.auth("login", LoginData(login, password))
-        result =  call?.execute()?.body()
+        ex_call =  call?.execute()
+        if(ex_call?.code()!=401){
+            result = ex_call?.body()
+        }
+        else{
+            return null
+        }
+
         return result
     }
 }
